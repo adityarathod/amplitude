@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 
 import { withFirebase } from '../Firebase'
-import { timeout } from 'q';
 
 
 class SpeechBox extends Component {

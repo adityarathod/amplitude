@@ -6,7 +6,7 @@ import * as ROUTES from '../../constants/routes'
 
 const LoginPage = () => (
     <div>
-        <h1>Sign In</h1>
+        <h1 className="title">Sign In</h1>
         <LoginForm />
     </div>
 )
@@ -26,7 +26,7 @@ class Login extends Component {
         this.props.firebase.doSignInWithEmailAndPassword(email, password)
             .then(() => {
                 this.setState({ ...INITIAL_STATE })
-                this.props.history.push('/')
+                this.props.history.push(ROUTES.DASHBOARD)
             })
             .catch(error => {
                 this.setState({ error })

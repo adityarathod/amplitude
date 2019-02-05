@@ -1,14 +1,24 @@
 import React, { Component } from 'react'
-import { withRouter } from 'react-router-dom'
+import { withRouter, Redirect, Link } from 'react-router-dom'
 import { compose } from 'recompose'
 import { withFirebase } from '../Firebase'
+import { AuthUserContext } from '../Session'
 import * as ROUTES from '../../constants/routes'
 
+import CenterScreen from '../CenterScreen'
+
 const LoginPage = () => (
-    <div>
-        <h1 className="title">Sign In</h1>
-        <LoginForm />
-    </div>
+    <CenterScreen>
+        <div className="container has-text-centered">
+            <Link to={ROUTES.LANDING}>
+                <strong>&larr; Home</strong>
+            </Link>
+            <br />
+            <br />
+            <h1 className="title">Log In to Amplitude</h1>
+            <LoginForm />
+        </div>
+    </CenterScreen>
 )
 
 const INITIAL_STATE = {
@@ -41,24 +51,41 @@ class Login extends Component {
         const isInvalid = password === '' || email === ''
         return (
             <form onSubmit={this.onSubmit}>
-                <input
-                    name="email"
-                    value={email} onChange={this.onChange} type="text" placeholder="Email Address"
-                /> <input
-                    name="password" value={password} onChange={this.onChange} type="password" placeholder="Password"
-                />
-                <button disabled={isInvalid} type="submit">
+                {error && <div className="notification is-danger"><strong>{error.message}</strong></div>}
+                <div className="field">
+                    <input
+                        name="email"
+                        className="input"
+                        value={email} onChange={this.onChange} type="text" placeholder="Email Address"
+                    />
+                </div>
+                <div className="field">
+                    <input
+                        className="input"
+                        name="password" value={password} onChange={this.onChange} type="password" placeholder="Password"
+                    />
+                </div>
+                <button disabled={isInvalid} type="submit" className="button is-link">
                     Sign In
-</button>
-                {error && <p>{error.message}</p>}
+                </button>
             </form>
         )
     }
 }
+
 const LoginForm = compose(
     withRouter,
     withFirebase,
 )(Login)
 
-export default LoginPage
+
+const LoginPageAuthy = () => (
+    <AuthUserContext.Consumer>
+        {authUser =>
+            authUser ? <Redirect to={ROUTES.DASHBOARD} /> : <LoginPage />
+        }
+    </AuthUserContext.Consumer>
+)
+
+export default LoginPageAuthy
 export { LoginForm }

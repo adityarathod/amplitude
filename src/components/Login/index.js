@@ -15,30 +15,30 @@ const INITIAL_STATE = {
     email: '',
     password: '',
     error: null,
-};
+}
 class Login extends Component {
     constructor(props) {
-        super(props);
-        this.state = { ...INITIAL_STATE };
+        super(props)
+        this.state = { ...INITIAL_STATE }
     }
     onSubmit = event => {
-        const { email, password } = this.state;
+        const { email, password } = this.state
         this.props.firebase.doSignInWithEmailAndPassword(email, password)
             .then(() => {
-                this.setState({ ...INITIAL_STATE });
-                this.props.history.push('/');
+                this.setState({ ...INITIAL_STATE })
+                this.props.history.push('/')
             })
             .catch(error => {
-                this.setState({ error });
-            });
-        event.preventDefault();
-    };
+                this.setState({ error })
+            })
+        event.preventDefault()
+    }
     onChange = event => {
-        this.setState({ [event.target.name]: event.target.value });
-    };
+        this.setState({ [event.target.name]: event.target.value })
+    }
     render() {
-        const { email, password, error } = this.state;
-        const isInvalid = password === '' || email === '';
+        const { email, password, error } = this.state
+        const isInvalid = password === '' || email === ''
         return (
             <form onSubmit={this.onSubmit}>
                 <input
@@ -52,13 +52,13 @@ class Login extends Component {
 </button>
                 {error && <p>{error.message}</p>}
             </form>
-        );
+        )
     }
 }
 const LoginForm = compose(
     withRouter,
     withFirebase,
-)(Login);
+)(Login)
 
-export default LoginPage;
-export { LoginForm };
+export default LoginPage
+export { LoginForm }

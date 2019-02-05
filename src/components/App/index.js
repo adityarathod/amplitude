@@ -8,7 +8,8 @@ import { withAuthentication } from '../Session'
 
 import Login from '../Login'
 import Dashboard from '../Dashboard'
-import Landing from '../Landing';
+import Landing from '../Landing'
+import Projector from '../Projector'
 
 
 const App = () => (
@@ -18,6 +19,7 @@ const App = () => (
             <Route exact path={ROUTES.LANDING} component={Landing} />
             <Route exact path={ROUTES.LOGIN} component={Login} />
             <Route exact path={ROUTES.DASHBOARD} component={Dashboard} />
+            <Route exact path={ROUTES.PROJECTOR} component={Projector} />
         </main>
     </Router>
 )

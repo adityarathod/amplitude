@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 
 import { withFirebase } from '../Firebase'
+import { timeout } from 'q';
 
 
 class SpeechBox extends Component {
@@ -19,6 +20,9 @@ class SpeechBox extends Component {
     respeak() {
         this.props.firebase.emitRespeakAction()
     }
+    stopSpeaking() {
+        this.props.firebase.emitStopAction()
+    }
     render() {
         return (
             <>
@@ -31,7 +35,10 @@ class SpeechBox extends Component {
                 >
                 </textarea>
                 <button className="button is-danger" onClick={this.speaker.bind(this)}>Announce</button>
+                &emsp;
                 <button className="button is-info" onClick={this.respeak.bind(this)}>Respeak</button>
+                &emsp;
+                <button className="button is-warning" onClick={this.stopSpeaking.bind(this)}>Stop Speaking</button>
             </>
         )
     }

@@ -31,7 +31,8 @@ class Firebase {
         this.auth.currentUser.updatePassword(password)
 
     // Firebase Database
-    notifyEvents = () => this.db.ref('notifyEvents');
+    notifyEvents = () => this.db.ref('notifyEvents')
+    completedEvents = () => this.db.ref('completedEvents')
 
     // Actions
     emitSpeakAction = text => {
@@ -47,6 +48,17 @@ class Firebase {
             event: 'RESPEAK_LAST',
             content: ''
         })
+    }
+    emitStopAction = () => {
+        var newRef = this.notifyEvents().push()
+        return newRef.set({
+            event: 'STOP',
+            content: ''
+        })
+    }
+    emitEventCompleted = event => {
+        var newRef = this.completedEvents().push()
+        return newRef.set(event)
     }
 }
 

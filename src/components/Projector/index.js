@@ -3,6 +3,8 @@ import { withFirebase } from '../Firebase'
 
 import Speech from 'speak-tts'
 
+import CenterScreen from '../CenterScreen'
+
 class Projector extends Component {
     constructor(props) {
         super(props)
@@ -12,17 +14,31 @@ class Projector extends Component {
         })
         this.state = {
             hasJustStarted: true,
-            tts: speech
+            tts: speech,
+            headline: ''
         }
+    }
+
+    speakWithText(text) {
+        this.setState({ headline: text })
+        this.state.tts.speak({
+            text: text,
+            listeners: {
+                onend: () => {
+                    this.setState({ headline: '' })
+                }
+            }
+        })
     }
 
     projectorDispatcher(event, content) {
         switch (event) {
             case 'SPEAK':
-                this.state.tts.speak({ text: content })
+                this.speakWithText(content)
                 break
             case 'RESPEAK_LAST':
                 var state = this.state
+                var self = this
                 this.props.firebase.notifyEvents().orderByChild('event').equalTo('SPEAK').limitToLast(1).once('value', snapshot => {
                     var childData = snapshot.val()
                     if (!childData) return
@@ -30,11 +46,12 @@ class Projector extends Component {
                     if (keys.length === 0) return
                     var childID = keys[0]
                     childData = childData[childID]
-                    state.tts.speak({ text: childData.content })
+                    self.speakWithText(childData.content)
                 })
                 break
             case 'STOP':
                 this.state.tts.cancel()
+                this.setState({ headline: '' })
                 break
             default:
                 console.log('Unresolved dispatch', event, content)
@@ -58,7 +75,14 @@ class Projector extends Component {
 
     render() {
         return (
-            <h1 className="title">AudioController</h1>
+            <CenterScreen>
+                <div className="container has-text-centered">
+                    {this.state.headline !== '' ? <h3 className="subtitle heading"><strong>Announcement</strong></h3> : null}
+                    <h1 className="title is-1">
+                        {this.state.headline}
+                    </h1>
+                </div>
+            </CenterScreen>
         )
     }
 }

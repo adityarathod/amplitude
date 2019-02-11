@@ -25,7 +25,9 @@ class Projector extends Component {
             text: text,
             listeners: {
                 onend: () => {
-                    this.setState({ headline: '' })
+                    if (!this.state.tts.pending()) {
+                        this.setState({ headline: '' })
+                    }
                 }
             }
         })

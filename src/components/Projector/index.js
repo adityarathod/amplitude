@@ -20,10 +20,12 @@ class Projector extends Component {
     }
 
     speakWithText(text) {
-        this.setState({ headline: text })
         this.state.tts.speak({
             text: text,
             listeners: {
+                onstart: () => {
+                    this.setState({ headline: text })
+                },
                 onend: () => {
                     if (!this.state.tts.pending()) {
                         this.setState({ headline: '' })
